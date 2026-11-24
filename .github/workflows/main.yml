@@ -1,0 +1,33 @@
+name: Build Android Emulator
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        pip install psutil pyinstaller
+    
+    - name: Build EXE
+      run: |
+        pyinstaller --onefile --name "UltraHack_Android_Emulator" android_emulator.py
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: UltraHack-Android-Emulator
+        path: dist/UltraHack_Android_Emulator.exe
